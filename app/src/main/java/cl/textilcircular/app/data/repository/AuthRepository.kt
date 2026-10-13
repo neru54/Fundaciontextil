@@ -108,8 +108,8 @@ class AuthRepository(
                 val correo = email.trim().lowercase()
                 if (codigosPendientes[correo] != codigo) throw ErrorNegocio("El código no coincide")
                 val socia = sociaDao.porEmail(correo) ?: throw ErrorNegocio("No encontramos la cuenta")
-                sociaDao.cambiarPassword(socia.id, PasswordHasher.hash(nueva))
                 codigosPendientes.remove(correo)
+                sociaDao.cambiarPassword(socia.id, PasswordHasher.hash(nueva))
             }
         }
 
