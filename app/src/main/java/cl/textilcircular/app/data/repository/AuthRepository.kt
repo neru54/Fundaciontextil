@@ -110,6 +110,7 @@ class AuthRepository(
                 val socia = sociaDao.porEmail(correo) ?: throw ErrorNegocio("No encontramos la cuenta")
                 sociaDao.cambiarPassword(socia.id, PasswordHasher.hash(nueva))
                 codigosPendientes.remove(correo)
+                Unit
             }
         }
 
