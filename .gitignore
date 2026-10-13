@@ -1,0 +1,15 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+.kotlin/
+# Firma release: nunca versionar el keystore ni sus claves
+keystore.properties
+*.jks
+*.keystore
