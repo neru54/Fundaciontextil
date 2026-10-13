@@ -21,11 +21,18 @@ jobs:
       - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Pruebas unitarias
-        run: ./gradlew testDebugUnitTest --stacktrace
+      - name: Compilar APK debug y ejecutar pruebas unitarias
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug testDebugUnitTest --continue 2>&1 | tee build.log
 
-      - name: Compilar APK debug
-        run: ./gradlew assembleDebug --stacktrace
+      - name: Resumen de errores
+        if: failure()
+        shell: bash
+        run: |
+          echo "===== ERRORES DE COMPILACION ====="
+          grep -E "^e: |\[ksp\]|What went wrong|FAILED|error:" build.log | sed 's#file:///home/runner/work/Fundaciontextil/Fundaciontextil/##' | sort -u | head -150
 
       - name: Publicar APK
         uses: actions/upload-artifact@v4
