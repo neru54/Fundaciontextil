@@ -12,10 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Muestra la foto guardada de una prenda a partir de su ruta.
- * La imagen se lee en segundo plano para no bloquear la interfaz.
- */
+/** Foto de la prenda, leída en segundo plano. */
 @Composable
 fun ProductImage(
     imagePath: String,

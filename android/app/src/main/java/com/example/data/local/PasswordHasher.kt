@@ -3,10 +3,7 @@ package com.example.data.local
 import java.security.MessageDigest
 import java.security.SecureRandom
 
-/**
- * Protege las contraseñas: se guarda SHA-256(sal + contraseña) aplicado muchas veces,
- * nunca la contraseña original. La sal es aleatoria y distinta para cada socia.
- */
+/** Hash SHA-256 iterado con sal aleatoria por socia. */
 object PasswordHasher {
     private const val ITERATIONS = 10_000
     private const val SALT_BYTES = 16
@@ -27,7 +24,7 @@ object PasswordHasher {
         return result.toHex()
     }
 
-    /** Compara en tiempo constante para no filtrar información por el tiempo de respuesta. */
+    /** Comparación en tiempo constante. */
     fun verify(password: String, salt: String, expectedHash: String): Boolean =
         MessageDigest.isEqual(
             hash(password, salt).toByteArray(Charsets.UTF_8),

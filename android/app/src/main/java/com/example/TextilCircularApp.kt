@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-/** Clase Application: se crea antes que cualquier pantalla y vive mientras la app esté abierta. */
+/** Inicializa el contenedor de dependencias. */
 class TextilCircularApp : Application() {
 
     lateinit var container: AppContainer

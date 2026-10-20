@@ -2,12 +2,8 @@ package com.example.domain.validation
 
 import com.example.domain.model.ProductCategories
 
-/**
- * Validadores de cada formulario de la app.
- * Toda la lógica de validación vive aquí: las pantallas solo muestran el resultado.
- */
+/** Validadores por formulario. */
 
-/** Formulario "Publicar prenda" (Mi Taller). */
 object ProductValidator {
     const val TITLE_MAX = 60
     const val ECO_TAG_MAX = 60
@@ -20,7 +16,6 @@ object ProductValidator {
         ValidationRules.length(value, 3, TITLE_MAX, "El nombre de la prenda")
     )
 
-    /** Acepta "35000" o "35.000". */
     fun validatePrice(value: String): ValidationResult {
         if (value.isBlank()) return ValidationResult.error("El precio es obligatorio")
         val price = parsePrice(value)
@@ -47,7 +42,7 @@ object ProductValidator {
         ValidationRules.length(value, 3, ECO_TAG_MAX, "El material rescatado")
     )
 
-    /** La descripción es opcional, pero si se escribe debe ser útil. */
+    /** Opcional. */
     fun validateDescription(value: String) = when {
         value.isBlank() -> ValidationResult.Valid
         value.trim().length < 10 -> ValidationResult.error("Describe la prenda con al menos 10 caracteres")
@@ -59,7 +54,6 @@ object ProductValidator {
         else ValidationResult.error("Agrega una foto de la prenda con la cámara o la galería")
 }
 
-/** Formulario de inicio de sesión de socia. */
 object LoginValidator {
     fun validateEmail(value: String) = ValidationRules.email(value)
     fun validatePassword(value: String) =
@@ -67,7 +61,6 @@ object LoginValidator {
         else ValidationResult.Valid
 }
 
-/** Formulario de registro de socia. */
 object RegisterValidator {
     fun validateName(value: String) = ValidationRules.personName(value, "El nombre")
     fun validateRut(value: String) = ValidationRules.rut(value)
@@ -89,7 +82,6 @@ object RegisterValidator {
     }
 }
 
-/** Formulario de datos de envío del carrito. */
 object CheckoutValidator {
     fun validateFullName(value: String) = ValidationRules.personName(value, "El nombre")
     fun validateAddress(value: String) = firstError(
@@ -100,7 +92,6 @@ object CheckoutValidator {
     fun validatePhone(value: String) = ValidationRules.chileanPhone(value)
 }
 
-/** Formulario de postulación a una convocatoria. */
 object ApplicationValidator {
     const val MOTIVATION_MIN = 20
     const val MOTIVATION_MAX = 300
@@ -111,7 +102,6 @@ object ApplicationValidator {
     )
 }
 
-/** Mensajes del chat con clientas. */
 object ChatMessageValidator {
     const val MAX_LENGTH = 500
 

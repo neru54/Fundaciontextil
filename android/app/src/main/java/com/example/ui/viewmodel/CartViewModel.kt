@@ -24,7 +24,7 @@ data class CartUiState(
     val isEmpty: Boolean get() = lines.isEmpty()
 }
 
-/** Formulario de datos de envío del checkout. */
+/** Formulario de envío. */
 data class CheckoutFormState(
     val fullName: FieldState = FieldState(),
     val address: FieldState = FieldState(),
@@ -77,7 +77,7 @@ class CartViewModel(
         checkoutForm = checkoutForm.copy(phone = checkoutForm.phone.update(value, CheckoutValidator::validatePhone))
     }
 
-    /** Valida los datos de envío, guarda el pedido y vacía el carrito. Devuelve el número de pedido. */
+    /** Guarda el pedido y devuelve su número. */
     fun submitCheckout(onSuccess: (orderId: Long) -> Unit) {
         val form = checkoutForm
         if (form.isSubmitting) return

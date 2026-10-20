@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/** Hace aparecer su contenido con un pequeño rebote (escala) la primera vez que se muestra. */
+/** Aparición con rebote. */
 @Composable
 fun PopIn(content: @Composable () -> Unit) {
     val visibleState = remember { MutableTransitionState(false).apply { targetState = true } }
@@ -43,7 +43,7 @@ fun PopIn(content: @Composable () -> Unit) {
     }
 }
 
-/** Ícono de éxito que aparece con rebote: se usa en las confirmaciones (prenda publicada, postulación...). */
+/** Ícono de éxito con rebote. */
 @Composable
 fun AnimatedSuccessIcon(tint: Color, size: Dp = 44.dp) {
     val scale = remember { Animatable(0f) }
@@ -63,10 +63,7 @@ fun AnimatedSuccessIcon(tint: Color, size: Dp = 44.dp) {
     )
 }
 
-/**
- * Contador que "salta" cuando aumenta (ej: carrito al agregar una prenda).
- * El número nuevo entra desde abajo y el anterior sale hacia arriba.
- */
+/** Contador animado al cambiar de valor. */
 @Composable
 fun BouncingCounter(count: Int, color: Color, modifier: Modifier = Modifier) {
     val scale = remember { Animatable(1f) }

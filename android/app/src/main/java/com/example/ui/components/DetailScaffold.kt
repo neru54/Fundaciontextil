@@ -16,10 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.ui.theme.TurquesaTextil
 
-/**
- * Estructura común de las pantallas secundarias (detalle, carrito, chat...):
- * barra superior con título y flecha para volver.
- */
+/** Pantalla secundaria con título y flecha "volver". */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScaffold(

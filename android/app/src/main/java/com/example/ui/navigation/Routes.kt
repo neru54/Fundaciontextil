@@ -1,17 +1,14 @@
 package com.example.ui.navigation
 
-/**
- * Rutas de navegación de la app.
- * Las pantallas principales aparecen en la barra inferior; el resto se abre encima con flecha "volver".
- */
+/** Rutas de navegación. */
 object Routes {
-    // Pestañas principales (barra inferior)
+    // Pestañas
     const val CATALOG = "catalog"
     const val ANNOUNCEMENTS = "announcements"
     const val MESSAGES = "messages"
     const val WORKSHOP = "workshop"
 
-    // Pantallas de detalle
+    // Detalle
     const val ARG_PRODUCT_ID = "productId"
     const val PRODUCT_DETAIL = "product/{$ARG_PRODUCT_ID}"
     fun productDetail(productId: Long) = "product/$productId"
@@ -23,10 +20,10 @@ object Routes {
     const val CART = "cart"
     const val CHECKOUT = "checkout"
 
-    // Acceso de socias
+    // Acceso
     const val LOGIN = "login"
     const val REGISTER = "register"
 
-    /** Rutas que muestran la barra superior de la marca y la barra inferior. */
+    /** Rutas con barras principales. */
     val topLevel = setOf(CATALOG, ANNOUNCEMENTS, MESSAGES, WORKSHOP)
 }

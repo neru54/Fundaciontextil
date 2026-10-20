@@ -13,10 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel del detalle de una prenda.
- * Recibe el id de la prenda desde la ruta de navegación (product/{productId}) mediante SavedStateHandle.
- */
+/** Detalle de prenda; recibe productId desde la ruta. */
 class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
     productRepository: ProductRepository,
@@ -43,7 +40,6 @@ class ProductDetailViewModel(
         }
     }
 
-    /** Busca la conversación asociada a la prenda y entrega su id para abrir el chat. */
     fun contactPartner(onChatReady: (chatId: Long, product: Product) -> Unit) {
         val current = product.value ?: return
         viewModelScope.launch {

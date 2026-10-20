@@ -28,7 +28,7 @@ class CatalogViewModel(
     private val cartRepository: CartRepository
 ) : ViewModel() {
 
-    /** Texto del buscador. Se usa estado de Compose para que el cursor del campo no salte. */
+    /** Estado de Compose para que el cursor no salte. */
     var searchQuery by mutableStateOf("")
         private set
 

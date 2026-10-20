@@ -5,10 +5,7 @@ import com.example.domain.model.Chat
 import com.example.domain.model.ChatMessage
 import com.example.domain.model.Product
 
-/**
- * Datos iniciales que se cargan en la base de datos Room
- * la primera vez que se abre la app (ver DatabaseSeeder).
- */
+/** Datos iniciales (ver DatabaseSeeder). */
 object SampleData {
     val sampleProducts = listOf(
         Product(
@@ -133,7 +130,6 @@ object SampleData {
         )
     )
 
-    /** Cada chat va acompañado de su historial de mensajes. */
     val sampleChats: List<Pair<Chat, List<ChatMessage>>> = listOf(
         Chat(
             clientName = "María Valenzuela",

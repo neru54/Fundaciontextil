@@ -70,7 +70,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    /** Chat que se debe abrir porque la usuaria tocó una notificación. */
+    /** Chat abierto desde una notificación. */
     private var pendingChatId by mutableStateOf<Long?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** Con launchMode="singleTop", tocar una notificación con la app abierta llega aquí. */
+    /** Notificación tocada con la app abierta (singleTop). */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -99,10 +99,7 @@ class MainActivity : ComponentActivity() {
         getLongExtra(NotificationHelper.EXTRA_CHAT_ID, -1L).takeIf { it > 0 }
 }
 
-/**
- * Pantalla raíz: barra superior y barra inferior para las pestañas principales,
- * y el NavHost que muestra la pantalla de la ruta actual.
- */
+/** Pantalla raíz: barras y NavHost. */
 @Composable
 fun MainAppScreen(
     pendingChatId: Long? = null,
@@ -123,7 +120,6 @@ fun MainAppScreen(
         scope.launch { snackbarHostState.showSnackbar(message) }
     }
 
-    // Aviso con acceso directo a Ajustes cuando se niega un permiso
     val showPermissionDenied: (String) -> Unit = { message ->
         scope.launch {
             val result = snackbarHostState.showSnackbar(
@@ -135,7 +131,6 @@ fun MainAppScreen(
         }
     }
 
-    // Al tocar una notificación se abre el chat correspondiente (cuando ya se leyó la sesión)
     LaunchedEffect(pendingChatId, mainState.isLoading) {
         val chatId = pendingChatId ?: return@LaunchedEffect
         if (mainState.isLoading) return@LaunchedEffect
@@ -146,7 +141,6 @@ fun MainAppScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            // Las pantallas de detalle tienen su propia barra con flecha "volver"
             AnimatedVisibility(
                 visible = isTopLevel,
                 enter = slideInVertically { -it } + fadeIn(),
@@ -169,8 +163,6 @@ fun MainAppScreen(
                     currentRoute = currentRoute,
                     totalUnreadMessages = mainState.unreadMessages,
                     onNavigate = { route ->
-                        // Patrón estándar de pestañas: no se apilan pantallas repetidas
-                        // y cada pestaña recuerda dónde estaba
                         navController.navigate(route) {
                             popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                             launchSingleTop = true
@@ -187,7 +179,7 @@ fun MainAppScreen(
             isSessionLoading = mainState.isLoading,
             showSnackbar = showSnackbar,
             onPermissionDenied = showPermissionDenied,
-            // Las pantallas de detalle traen su propio Scaffold, así que no se les suma este padding
+            // Los detalles tienen su propio Scaffold
             modifier = if (isTopLevel) Modifier.padding(paddingValues) else Modifier
         )
     }

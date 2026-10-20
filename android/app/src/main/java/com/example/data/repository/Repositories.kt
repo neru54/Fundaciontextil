@@ -32,10 +32,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Los repositorios son la única puerta de entrada a los datos.
- * Los ViewModels no saben si los datos vienen de Room, DataStore o una API.
- */
+/** Repositorios: único acceso a los datos desde los ViewModels. */
 
 class ProductRepository(private val dao: ProductDao) {
 
@@ -48,7 +45,6 @@ class ProductRepository(private val dao: ProductDao) {
     fun productsByPartner(partnerName: String): Flow<List<Product>> =
         dao.observeByPartner(partnerName).map { list -> list.map { it.toDomain() } }
 
-    /** Guarda una prenda nueva y devuelve su id generado. */
     suspend fun publish(product: Product): Long =
         dao.insert(product.copy(id = 0).toEntity())
 }
@@ -74,7 +70,7 @@ class AnnouncementRepository(private val dao: AnnouncementDao) {
     val announcements: Flow<List<Announcement>> =
         dao.observeAll().map { list -> list.map { it.toDomain() } }
 
-    /** Devuelve true si la postulación se registró (false si ya postuló o no hay cupos). */
+    /** false si ya postuló o no hay cupos. */
     suspend fun applyTo(announcementId: Long, motivation: String): Boolean =
         dao.markApplied(announcementId, motivation.trim()) > 0
 }
@@ -104,7 +100,6 @@ class ChatRepository(private val dao: ChatDao) {
 
     suspend fun markAsRead(chatId: Long) = dao.markAsRead(chatId)
 
-    /** Registra un mensaje que llega de la clienta del chat. Devuelve el chat actualizado. */
     suspend fun receiveClientMessage(chatId: Long, text: String): Chat? {
         val chat = dao.findById(chatId) ?: return null
         val time = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
@@ -114,25 +109,22 @@ class ChatRepository(private val dao: ChatDao) {
         return chat.toDomain()
     }
 
-    /** Busca el chat asociado a una prenda; si no existe, devuelve el primero. */
+    /** Si no hay chat de la prenda, devuelve el primero. */
     suspend fun findChatIdForProduct(productTitle: String): Long? =
         dao.findIdByProductTitle(productTitle) ?: dao.firstId()
 }
 
-/** Resultado del registro de una socia. */
 sealed interface RegisterResult {
     data class Success(val partnerId: Long) : RegisterResult
     data object EmailAlreadyUsed : RegisterResult
     data object RutAlreadyUsed : RegisterResult
 }
 
-/** Registro, inicio y cierre de sesión de socias. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class AuthRepository(
     private val partnerDao: PartnerDao,
     private val session: SessionDataStore
 ) {
-    /** Socia con sesión activa, o null si se navega como visitante. */
     val currentPartner: Flow<Partner?> = session.loggedPartnerId.flatMapLatest { id ->
         if (id == null) flowOf(null)
         else partnerDao.observeById(id).map { it?.toDomain() }
@@ -161,7 +153,6 @@ class AuthRepository(
         return RegisterResult.Success(id)
     }
 
-    /** Devuelve true si el correo y la contraseña coinciden. */
     suspend fun login(email: String, password: String): Boolean {
         val partner = partnerDao.findByEmail(email.trim().lowercase()) ?: return false
         if (!PasswordHasher.verify(password, partner.passwordSalt, partner.passwordHash)) return false
@@ -172,12 +163,10 @@ class AuthRepository(
     suspend fun logout() = session.setLoggedPartner(null)
 }
 
-/** Pedidos confirmados desde el carrito. */
 class OrderRepository(private val orderDao: OrderDao) {
 
     val orderCount: Flow<Int> = orderDao.observeCount()
 
-    /** Guarda el pedido y vacía el carrito. Devuelve el número de pedido. */
     suspend fun placeOrder(shipping: ShippingInfo, lines: List<CartLine>): Long =
         orderDao.placeOrder(
             OrderEntity(

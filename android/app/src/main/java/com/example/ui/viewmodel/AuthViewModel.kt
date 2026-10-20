@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 data class LoginFormState(
     val email: FieldState = FieldState(),
     val password: FieldState = FieldState(),
-    /** Error que no pertenece a un campo (ej: credenciales incorrectas). */
+    /** Error general (ej: credenciales). */
     val generalError: String? = null,
     val isSubmitting: Boolean = false
 ) {
@@ -55,7 +55,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         registerForm = RegisterFormState()
     }
 
-    // ---------- Inicio de sesión ----------
+    // Login
 
     fun onLoginEmailChange(value: String) {
         loginForm = loginForm.copy(
@@ -96,7 +96,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    // ---------- Registro ----------
+    // Registro
 
     fun onNameChange(value: String) {
         registerForm = registerForm.copy(name = registerForm.name.update(value, RegisterValidator::validateName))
@@ -135,7 +135,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         val confirmation = form.passwordConfirmation
         registerForm = form.copy(
             password = form.password.update(value, RegisterValidator::validatePassword),
-            // Si ya escribió la confirmación, se vuelve a comparar con la nueva contraseña
+            // Revalida la confirmación
             passwordConfirmation = if (confirmation.touched) {
                 confirmation.validate { RegisterValidator.validatePasswordConfirmation(value, it) }
             } else confirmation

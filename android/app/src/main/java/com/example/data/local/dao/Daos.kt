@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
-    /** Las prendas nuevas aparecen primero; las iniciales mantienen su orden. */
+    /** Más recientes primero. */
     @Query("SELECT * FROM products ORDER BY createdAt DESC, id ASC")
     fun observeAll(): Flow<List<ProductEntity>>
 
@@ -68,10 +68,7 @@ interface AnnouncementDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<AnnouncementEntity>)
 
-    /**
-     * Marca la postulación y descuenta un cupo.
-     * Devuelve 1 si se aplicó, 0 si ya había postulado o no quedan cupos.
-     */
+    /** Registra la postulación y descuenta un cupo. Devuelve 0 si no se aplicó. */
     @Query(
         """
         UPDATE announcements
@@ -120,7 +117,7 @@ abstract class ChatDao {
     @Query("SELECT * FROM chats WHERE id = :chatId")
     abstract suspend fun findById(chatId: Long): ChatEntity?
 
-    /** Mensaje entrante de una clienta: se guarda, se actualiza la vista previa y suma un no leído. */
+    /** Mensaje entrante: suma un no leído. */
     @Transaction
     open suspend fun receiveMessage(message: MessageEntity) {
         insertMessage(message)
@@ -134,14 +131,12 @@ abstract class ChatDao {
     @Query("SELECT COUNT(*) FROM chats")
     abstract suspend fun count(): Int
 
-    /** Guarda el mensaje y actualiza la vista previa del chat en una sola transacción. */
     @Transaction
     open suspend fun sendMessage(message: MessageEntity) {
         insertMessage(message)
         updateLastMessage(message.chatId, message.text, message.time)
     }
 
-    /** Inserta un chat junto a su historial de mensajes. */
     @Transaction
     open suspend fun insertChatWithMessages(chat: ChatEntity, messages: List<MessageEntity>) {
         val chatId = insertChat(chat)
@@ -181,7 +176,7 @@ abstract class OrderDao {
     @Query("SELECT COUNT(*) FROM orders")
     abstract fun observeCount(): Flow<Int>
 
-    /** Guarda el pedido y vacía el carrito en una sola transacción. */
+    /** Pedido y vaciado del carrito en una transacción. */
     @Transaction
     open suspend fun placeOrder(order: OrderEntity): Long {
         val id = insert(order)

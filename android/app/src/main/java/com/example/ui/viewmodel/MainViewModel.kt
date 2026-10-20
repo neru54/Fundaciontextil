@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
-/** Estado global que muestran la barra superior y la barra de navegación. */
+/** Estado de las barras. */
 data class MainUiState(
     val currentPartner: Partner? = null,
     val unreadMessages: Int = 0,
     val cartCount: Int = 0,
-    /** true mientras se lee la sesión guardada (evita mostrar "visitante" por un instante). */
+    /** true mientras se lee la sesión. */
     val isLoading: Boolean = true
 ) {
     val isSociaLoggedIn: Boolean get() = currentPartner != null

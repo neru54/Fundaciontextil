@@ -1,9 +1,6 @@
 package com.example.domain.validation
 
-/**
- * Reglas de validación reutilizables.
- * Es Kotlin puro (sin dependencias de Android), por eso se puede probar con tests unitarios.
- */
+/** Reglas de validación en Kotlin puro. */
 object ValidationRules {
 
     private val EMAIL_REGEX = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
@@ -33,7 +30,7 @@ object ValidationRules {
         else ValidationResult.error("Ingresa un correo válido (ej: nombre@correo.cl)")
     )
 
-    /** Celular chileno: 9XXXXXXXX, con o sin +56. Se ignoran espacios y guiones. */
+    /** 9XXXXXXXX, con o sin +56. */
     fun chileanPhone(value: String): ValidationResult {
         val normalized = value.replace(" ", "").replace("-", "")
         return firstError(
@@ -50,7 +47,7 @@ object ValidationRules {
         else ValidationResult.error("$fieldName solo puede contener letras y espacios")
     )
 
-    /** Contraseña de al menos 8 caracteres con letras y números. */
+    /** Mín. 8 caracteres con letras y números. */
     fun password(value: String): ValidationResult = when {
         value.isEmpty() -> ValidationResult.error("La contraseña es obligatoria")
         value.length < 8 -> ValidationResult.error("La contraseña debe tener al menos 8 caracteres")
@@ -59,10 +56,7 @@ object ValidationRules {
         else -> ValidationResult.Valid
     }
 
-    /**
-     * RUT chileno con dígito verificador (módulo 11).
-     * Acepta "12.345.678-5", "12345678-5" o "123456785".
-     */
+    /** RUT con dígito verificador (módulo 11), con o sin puntos y guion. */
     fun rut(value: String): ValidationResult {
         if (value.isBlank()) return ValidationResult.error("El RUT es obligatorio")
         val clean = value.replace(".", "").replace("-", "").trim().uppercase()
@@ -78,7 +72,7 @@ object ValidationRules {
         else ValidationResult.error("El dígito verificador del RUT no es correcto")
     }
 
-    /** Deja el RUT en un formato único para guardarlo: "12345678-5". */
+    /** Formato "12345678-5". */
     fun normalizeRut(value: String): String {
         val clean = value.replace(".", "").replace("-", "").trim().uppercase()
         if (clean.length < 2) return clean

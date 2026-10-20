@@ -36,28 +36,23 @@ import com.example.ui.screens.auth.LoginScreen
 import com.example.ui.screens.auth.RegisterScreen
 import com.example.ui.theme.TurquesaTextil
 
-/**
- * Mapa de navegación de la app: qué pantalla corresponde a cada ruta
- * y cómo se pasa de una a otra.
- */
+/** Grafo de navegación de la app. */
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
     isSociaLoggedIn: Boolean,
     isSessionLoading: Boolean,
     showSnackbar: (String) -> Unit,
-    /** Muestra un aviso con el botón "Ajustes" cuando se niega un permiso. */
     onPermissionDenied: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
 
-    // Pide el permiso de notificaciones (Android 13+) explicando antes para qué se usa
     val notificationGate = rememberNotificationPermissionGate(
         onDenied = { onPermissionDenied("Notificaciones desactivadas. Puedes activarlas en Ajustes.") }
     )
 
-    // Protege las rutas exclusivas para socias: sin sesión se ofrece iniciarla o registrarse
+    // Rutas exclusivas para socias
     val sociaOnly: @Composable (title: String, description: String, content: @Composable () -> Unit) -> Unit =
         { title, description, content ->
             when {
@@ -78,13 +73,13 @@ fun AppNavGraph(
         navController = navController,
         startDestination = Routes.CATALOG,
         modifier = modifier,
-        // Transiciones: entre pestañas un fundido; al abrir un detalle, desliza desde la derecha
+        // Fundido entre pestañas, deslizamiento en detalles
         enterTransition = { enterAnimation() },
         exitTransition = { exitAnimation() },
         popEnterTransition = { popEnterAnimation() },
         popExitTransition = { popExitAnimation() }
     ) {
-        // ---------- Pestañas principales ----------
+        // Pestañas
 
         composable(Routes.CATALOG) {
             CatalogScreen(
@@ -108,7 +103,6 @@ fun AppNavGraph(
                 MessagesScreen(
                     onOpenChat = { chatId -> navController.navigate(Routes.chat(chatId)) },
                     onIncomingMessage = { chatId, clientName, text ->
-                        // Recursos nativos: vibración + notificación que abre el chat al tocarla
                         VibrationHelper.vibrateNewMessage(context)
                         notificationGate.runWithPermission {
                             NotificationHelper.showClientMessageNotification(
@@ -142,7 +136,7 @@ fun AppNavGraph(
             }
         }
 
-        // ---------- Pantallas de detalle ----------
+        // Detalle
 
         composable(
             route = Routes.PRODUCT_DETAIL,
@@ -152,7 +146,6 @@ fun AppNavGraph(
                 onBack = { navController.popBackStack() },
                 onAddedToCart = { product -> showSnackbar("Agregado al carrito: ${product.title}") },
                 onOpenChat = { chatId, product ->
-                    // Notificación nativa que avisa de la nueva consulta (si hay permiso)
                     notificationGate.runWithPermission {
                         NotificationHelper.showClientMessageNotification(
                             context = context,
@@ -198,13 +191,13 @@ fun AppNavGraph(
                 onBack = { navController.popBackStack() },
                 onOrderPlaced = { orderId ->
                     showSnackbar("¡Pedido #$orderId confirmado! Tu compra apoya el comercio justo.")
-                    // Vuelve al catálogo y saca el carrito y el checkout del historial
+                    // Vuelve al catálogo limpiando el historial
                     navController.popBackStack(Routes.CATALOG, inclusive = false)
                 }
             )
         }
 
-        // ---------- Acceso de socias ----------
+        // Acceso
 
         composable(Routes.LOGIN) {
             LoginScreen(
@@ -240,11 +233,11 @@ fun AppNavGraph(
     }
 }
 
-// ---------- Animaciones de transición entre pantallas ----------
+// Transiciones
 
 private const val TRANSITION_MS = 320
 
-/** true cuando se cambia de una pestaña principal a otra (no hay "profundidad"). */
+/** true si se cambia entre pestañas. */
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.isTabSwitch(): Boolean =
     initialState.destination.route in Routes.topLevel && targetState.destination.route in Routes.topLevel
 

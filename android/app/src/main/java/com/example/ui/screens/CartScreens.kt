@@ -61,7 +61,6 @@ import com.example.ui.theme.TurquesaTextil
 import com.example.ui.viewmodel.AppViewModelProvider
 import com.example.ui.viewmodel.CartViewModel
 
-/** Pantalla del carrito (ruta "cart"). */
 @Composable
 fun CartScreen(
     onBack: () -> Unit,
@@ -151,7 +150,6 @@ fun CartScreen(
         ) {
             items(cart.lines, key = { it.cartId }) { line ->
                 Card(
-                    // Al quitar una prenda, el resto de la lista se desplaza con animación
                     modifier = Modifier.animateItem(),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     shape = RoundedCornerShape(12.dp),
@@ -178,14 +176,12 @@ fun CartScreen(
     }
 }
 
-/** Pantalla de datos de envío y confirmación del pedido (ruta "checkout"). */
 @Composable
 fun CheckoutScreen(
     onBack: () -> Unit,
     onOrderPlaced: (orderId: Long) -> Unit,
     viewModel: CartViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // Se observa el carrito para mostrar el total y para que el ViewModel tenga las líneas al confirmar
     val cart by viewModel.uiState.collectAsStateWithLifecycle()
     val form = viewModel.checkoutForm
 
@@ -231,7 +227,6 @@ fun CheckoutScreen(
                 keyboardType = KeyboardType.Phone
             )
 
-            // Resumen del pedido
             Card(
                 colors = CardDefaults.cardColors(containerColor = TurquesaClaro),
                 shape = RoundedCornerShape(12.dp),

@@ -1,9 +1,6 @@
 package com.example.domain.validation
 
-/**
- * Resultado de validar un campo.
- * Si no es válido, trae el mensaje que la interfaz debe mostrar bajo el campo.
- */
+/** Resultado de validar un campo. */
 data class ValidationResult(
     val isValid: Boolean,
     val errorMessage: String? = null
@@ -14,6 +11,6 @@ data class ValidationResult(
     }
 }
 
-/** Devuelve el primer resultado inválido de la lista, o Valid si todos pasan. */
+/** Primer resultado inválido, o Valid. */
 fun firstError(vararg results: ValidationResult): ValidationResult =
     results.firstOrNull { !it.isValid } ?: ValidationResult.Valid

@@ -56,7 +56,6 @@ fun CatalogScreen(
     modifier: Modifier = Modifier,
     viewModel: CatalogViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // El filtrado y los datos viven en el ViewModel; la pantalla solo dibuja el estado.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchQuery = viewModel.searchQuery
     val filteredProducts = uiState.products
@@ -68,7 +67,6 @@ fun CatalogScreen(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Banner de impacto ecológico
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -107,7 +105,6 @@ fun CatalogScreen(
             }
         }
 
-        // Buscador
         item {
             OutlinedTextField(
                 value = searchQuery,
@@ -135,7 +132,6 @@ fun CatalogScreen(
             )
         }
 
-        // Selector horizontal de categorías
         item {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -158,7 +154,6 @@ fun CatalogScreen(
             }
         }
 
-        // Contador de resultados
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -178,7 +173,6 @@ fun CatalogScreen(
             }
         }
 
-        // Mensaje animado cuando el filtro no encuentra prendas
         item(key = "empty") {
             AnimatedVisibility(
                 visible = filteredProducts.isEmpty(),
@@ -194,11 +188,9 @@ fun CatalogScreen(
             }
         }
 
-        // Lista de tarjetas de producto
         items(filteredProducts, key = { it.id }) { product ->
             ProductCardItem(
                 product = product,
-                // Las tarjetas se reordenan/entran/salen con animación al filtrar
                 modifier = Modifier.animateItem(),
                 onViewDetails = { onProductClick(product.id) },
                 onAddToCart = {
@@ -217,7 +209,7 @@ fun ProductCardItem(
     onAddToCart: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Al agregar, el botón muestra "Agregado ✓" por un momento como confirmación
+    // Feedback "Agregado ✓"
     var justAdded by remember { mutableStateOf(false) }
     LaunchedEffect(justAdded) {
         if (justAdded) {
@@ -236,7 +228,6 @@ fun ProductCardItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
-            // Cabecera visual de la prenda con textura simulada y badge
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -250,7 +241,6 @@ fun ProductCardItem(
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                // Etiqueta de socia y comuna
                 Surface(
                     shape = RoundedCornerShape(topStart = 0.dp, bottomStart = 0.dp, topEnd = 8.dp, bottomEnd = 8.dp),
                     color = Color.Black.copy(alpha = 0.5f),
@@ -267,7 +257,6 @@ fun ProductCardItem(
                     )
                 }
 
-                // Badge ecológico
                 Surface(
                     shape = RoundedCornerShape(8.dp),
                     color = AmarilloMostaza,
@@ -285,7 +274,6 @@ fun ProductCardItem(
                 }
             }
 
-            // Cuerpo de información
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

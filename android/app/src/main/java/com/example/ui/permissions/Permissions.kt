@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat
 import com.example.ui.theme.TurquesaTextil
 
-/** Abre la pantalla de Ajustes de la app para que la usuaria active un permiso denegado. */
+/** Abre los Ajustes de la app. */
 fun openAppSettings(context: Context) {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -37,22 +37,17 @@ fun openAppSettings(context: Context) {
 fun hasPermission(context: Context, permission: String): Boolean =
     ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
 
-/** Ejecuta acciones que necesitan el permiso de notificaciones (Android 13 o superior). */
+/** Ejecuta acciones que requieren permiso de notificaciones. */
 class NotificationPermissionGate internal constructor(
     private val isGranted: () -> Boolean,
     private val askWithRationale: (onGranted: () -> Unit) -> Unit
 ) {
-    /** Si el permiso ya está concedido ejecuta la acción; si no, explica por qué se necesita y lo pide. */
     fun runWithPermission(action: () -> Unit) {
         if (isGranted()) action() else askWithRationale(action)
     }
 }
 
-/**
- * Prepara la solicitud del permiso POST_NOTIFICATIONS.
- * Antes de mostrar el diálogo del sistema se explica para qué se usa (buena práctica de Android).
- * onDenied se llama si la usuaria lo rechaza, para ofrecer ir a Ajustes.
- */
+/** Pide POST_NOTIFICATIONS explicando antes su uso; onDenied permite ofrecer Ajustes. */
 @Composable
 fun rememberNotificationPermissionGate(onDenied: () -> Unit): NotificationPermissionGate {
     val context = LocalContext.current

@@ -35,17 +35,14 @@ class MessagesViewModel(
     authRepository: AuthRepository
 ) : ViewModel() {
 
-    /** La socia que responde los mensajes. */
     private val currentPartner: StateFlow<Partner?> = authRepository.currentPartner
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val selectedChatId = MutableStateFlow<Long?>(null)
 
-    /** Texto que la socia está escribiendo en el chat. */
     var replyText by mutableStateOf("")
         private set
 
-    /** Error de validación del mensaje (null si no hay error). */
     var replyError by mutableStateOf<String?>(null)
         private set
 
@@ -80,10 +77,7 @@ class MessagesViewModel(
         selectedChatId.value = null
     }
 
-    /**
-     * Simula que una clienta escribe (para demostrar notificaciones y vibración):
-     * el mensaje se guarda en Room y onReceived recibe los datos para notificar.
-     */
+    /** Simula un mensaje entrante para probar notificación y vibración. */
     fun simulateIncomingMessage(onReceived: (chatId: Long, clientName: String, text: String) -> Unit) {
         val chat = uiState.value.chats.firstOrNull() ?: return
         val text = SIMULATED_MESSAGES.random()
@@ -94,7 +88,7 @@ class MessagesViewModel(
 
     fun onReplyChange(text: String) {
         replyText = text
-        // Mientras escribe solo se avisa si se pasa del largo máximo
+        // Solo avisa si se excede el largo
         replyError = if (text.trim().length > ChatMessageValidator.MAX_LENGTH) {
             ChatMessageValidator.validate(text).errorMessage
         } else null

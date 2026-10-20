@@ -14,10 +14,7 @@ import androidx.core.content.ContextCompat
 import com.example.MainActivity
 import com.example.R
 
-/**
- * Notificaciones nativas de Android para avisar a la socia de nuevas consultas.
- * Al tocar la notificación se abre directamente la conversación correspondiente.
- */
+/** Notificaciones de nuevas consultas; al tocarlas abren el chat. */
 object NotificationHelper {
     const val CHANNEL_ID = "channel_consultas_clientas"
     const val EXTRA_CHAT_ID = "extra_chat_id"
@@ -35,10 +32,7 @@ object NotificationHelper {
         }
     }
 
-    /**
-     * Muestra la notificación de una consulta. Si el permiso no está concedido no hace nada
-     * (la pantalla se encarga de pedirlo antes con NotificationPermissionGate).
-     */
+    /** No hace nada si falta el permiso. */
     fun showClientMessageNotification(
         context: Context,
         notificationId: Int,
@@ -53,7 +47,6 @@ object NotificationHelper {
 
         createNotificationChannel(context)
 
-        // Al tocarla abre la app en el chat (MainActivity lee EXTRA_CHAT_ID)
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             if (chatId != null) putExtra(EXTRA_CHAT_ID, chatId)
@@ -68,7 +61,6 @@ object NotificationHelper {
         val title = if (productTitle != null) "Consulta de $clientName sobre $productTitle"
         else "Nuevo mensaje de $clientName"
 
-        // Color de acento sin "colorized": el sistema usa su fondo estándar y el texto mantiene contraste
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_textil)
             .setColor(BRAND_COLOR)
@@ -88,7 +80,7 @@ object NotificationHelper {
         try {
             NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         } catch (_: SecurityException) {
-            // El permiso fue revocado mientras la app estaba abierta
+            // Permiso revocado
         }
     }
 }

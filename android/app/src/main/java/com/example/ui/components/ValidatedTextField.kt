@@ -41,12 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.TurquesaTextil
 import com.example.ui.viewmodel.form.FieldState
 
-/**
- * Campo de texto con retroalimentación visual estándar para toda la app:
- * - borde y texto rojo + ícono de error cuando el valor no es válido
- * - ícono de check verde cuando el valor fue editado y es válido
- * - mensaje de error o de ayuda bajo el campo, y contador de caracteres opcional
- */
+/** Campo de texto con error, check de válido, ayuda y contador. */
 @Composable
 fun ValidatedTextField(
     field: FieldState,
@@ -66,7 +61,7 @@ fun ValidatedTextField(
     val errorMessage = field.error.takeIf { field.touched }
     val isError = errorMessage != null
 
-    // Animación de "sacudida" cuando el campo pasa de válido a error (ej: al presionar Enviar)
+    // Sacudida al pasar a error
     val shakeOffset = remember { Animatable(0f) }
     var wasError by remember { mutableStateOf(false) }
     LaunchedEffect(isError) {
@@ -78,14 +73,13 @@ fun ValidatedTextField(
         wasError = isError
     }
 
-    // Tipos explícitos para que Compose reconozca los lambdas como @Composable
+    // Tipos explícitos para lambdas @Composable
     val placeholderContent: (@Composable () -> Unit)? =
         if (placeholder != null) { { Text(placeholder) } } else null
     val leadingContent: (@Composable () -> Unit)? =
         if (leadingIcon != null) { { Icon(leadingIcon, contentDescription = null) } } else null
     var passwordVisible by remember { mutableStateOf(false) }
     val trailingContent: (@Composable () -> Unit)? = when {
-        // En contraseñas el ícono final permite mostrar/ocultar el texto
         isPassword -> {
             {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -117,7 +111,6 @@ fun ValidatedTextField(
         isError = isError,
         supportingText = {
             Row {
-                // El mensaje cambia con una transición suave entre ayuda y error
                 AnimatedContent(
                     targetState = errorMessage ?: helperText.orEmpty(),
                     transitionSpec = {

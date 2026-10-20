@@ -20,7 +20,6 @@ import com.example.data.local.entity.OrderEntity
 import com.example.data.local.entity.PartnerEntity
 import com.example.data.local.entity.ProductEntity
 
-/** Base de datos local de la app (SQLite a través de Room). */
 @Database(
     entities = [
         ProductEntity::class,
@@ -45,10 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         private const val DB_NAME = "textil_circular.db"
 
-        /**
-         * Migración de la versión 1 a la 2: agrega socias, pedidos y el motivo de postulación
-         * sin borrar los datos que la usuaria ya tenía guardados.
-         */
+        /** v1 → v2: socias, pedidos y motivo de postulación, sin perder datos. */
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
@@ -90,7 +86,6 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var instance: AppDatabase? = null
 
-        /** Devuelve una única instancia (Singleton) para toda la app. */
         fun getInstance(context: Context): AppDatabase =
             instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(

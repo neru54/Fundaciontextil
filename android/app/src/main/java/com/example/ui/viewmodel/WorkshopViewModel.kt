@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/** Estado completo del formulario "Publicar prenda". */
+/** Formulario "Publicar prenda". */
 data class PublishFormState(
     val title: FieldState = FieldState(),
     val price: FieldState = FieldState(),
@@ -48,7 +48,6 @@ class WorkshopViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    /** Cierra la sesión y avisa cuando terminó de guardarse. */
     fun logout(onLoggedOut: () -> Unit) {
         viewModelScope.launch {
             authRepository.logout()
@@ -56,7 +55,6 @@ class WorkshopViewModel(
         }
     }
 
-    /** Socia con sesión iniciada (null si es visitante). */
     val currentPartner: StateFlow<Partner?> = authRepository.currentPartner
         .stateIn(
             scope = viewModelScope,
@@ -64,7 +62,6 @@ class WorkshopViewModel(
             initialValue = null
         )
 
-    /** Prendas publicadas por la socia actual (se actualiza sola al publicar). */
     val myProducts: StateFlow<List<Product>> = currentPartner
         .flatMapLatest { partner ->
             if (partner == null) flowOf(emptyList())
@@ -76,7 +73,7 @@ class WorkshopViewModel(
             initialValue = emptyList()
         )
 
-    /** Estado del formulario. Vive en el ViewModel, así no se pierde al girar la pantalla. */
+    /** Sobrevive a la rotación. */
     var publishForm by mutableStateOf(PublishFormState())
         private set
 
@@ -84,7 +81,7 @@ class WorkshopViewModel(
         publishForm = PublishFormState()
     }
 
-    // --- Eventos de cada campo: se validan en el momento con ProductValidator ---
+    // Validación en vivo con ProductValidator
 
     fun onTitleChange(value: String) {
         publishForm = publishForm.copy(title = publishForm.title.update(value, ProductValidator::validateTitle))
@@ -122,10 +119,8 @@ class WorkshopViewModel(
         )
     }
 
-    /** URI temporal para que la cámara guarde la foto (se crea justo antes de abrirla). */
     fun createCameraUri(): Uri = imageStorage.createCameraUri()
 
-    /** Carga en segundo plano la foto tomada con la cámara o elegida en la galería. */
     fun onPhotoUriSelected(uri: Uri) {
         publishForm = publishForm.copy(isLoadingPhoto = true, photoError = null)
         viewModelScope.launch {
@@ -141,15 +136,11 @@ class WorkshopViewModel(
         }
     }
 
-    /** Errores que vienen de los recursos nativos (permiso denegado, imagen ilegible...). */
     fun onPhotoError(message: String) {
         publishForm = publishForm.copy(photoError = message)
     }
 
-    /**
-     * Valida todos los campos. Si todo está bien guarda la foto y la prenda en Room.
-     * onPublished se llama solo cuando la prenda quedó guardada.
-     */
+    /** Valida y guarda la prenda; onPublished solo si se guardó. */
     fun submitPublishForm(onPublished: (Product) -> Unit) {
         val form = publishForm
         if (form.isSubmitting) return

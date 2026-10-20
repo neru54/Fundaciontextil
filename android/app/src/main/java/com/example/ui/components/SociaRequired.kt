@@ -39,10 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.NegroCarbon
 import com.example.ui.theme.TurquesaTextil
 
-/**
- * Pantalla que se muestra en las secciones exclusivas para socias
- * cuando se navega como visitante.
- */
+/** Aviso en secciones exclusivas para socias cuando no hay sesión. */
 @Composable
 fun SociaRequiredScreen(
     title: String,
@@ -126,7 +123,7 @@ fun SociaRequiredScreen(
     }
 }
 
-/** Mensaje de error general de un formulario (no pertenece a un campo específico). */
+/** Error general del formulario. */
 @Composable
 fun FormErrorBanner(message: String, modifier: Modifier = Modifier) = PopIn {
     Card(

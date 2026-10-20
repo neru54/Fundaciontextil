@@ -6,7 +6,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 
-/** Vibración corta del dispositivo para avisar de un mensaje nuevo (permiso VIBRATE). */
+/** Vibración corta para mensajes nuevos. */
 object VibrationHelper {
 
     private val PATTERN = longArrayOf(0, 80, 60, 80)

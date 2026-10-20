@@ -33,11 +33,10 @@ import com.example.ui.theme.TurquesaOscuro
 import com.example.ui.theme.TurquesaTextil
 import com.example.ui.components.DetailScaffold
 
-/** Bandeja de consultas de clientas (ruta "messages"). */
 @Composable
 fun MessagesScreen(
     onOpenChat: (chatId: Long) -> Unit,
-    /** Se llama cuando llega un mensaje nuevo (para notificar y vibrar). */
+    /** Para notificar y vibrar. */
     onIncomingMessage: (chatId: Long, clientName: String, text: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MessagesViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -45,7 +44,6 @@ fun MessagesScreen(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Vista general de mensajes recibidos
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -176,14 +174,13 @@ fun MessagesScreen(
     }
 }
 
-/** Conversación con una clienta (ruta "chat/{chatId}"). */
 @Composable
 fun ChatScreen(
     chatId: Long,
     onBack: () -> Unit,
     viewModel: MessagesViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // Al entrar se selecciona el chat de la ruta y se marca como leído
+    // Marca el chat como leído
     LaunchedEffect(chatId) { viewModel.openChat(chatId) }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -191,7 +188,7 @@ fun ChatScreen(
     val chat = uiState.selectedChat
     val listState = rememberLazyListState()
 
-    // Baja automáticamente al último mensaje cuando llega uno nuevo
+    // Desplaza al último mensaje
     LaunchedEffect(uiState.messages.size) {
         if (uiState.messages.isNotEmpty()) listState.animateScrollToItem(uiState.messages.lastIndex)
     }
@@ -208,7 +205,6 @@ fun ChatScreen(
                 .padding(padding)
                 .imePadding()
         ) {
-            // Historial de mensajes
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -220,7 +216,6 @@ fun ChatScreen(
                 items(uiState.messages, key = { it.id }) { msg ->
                     val isClient = msg.isClient
                     Row(
-                        // Cada mensaje nuevo entra con un fundido
                         modifier = Modifier
                             .animateItem()
                             .fillMaxWidth(),
@@ -257,7 +252,6 @@ fun ChatScreen(
                 }
             }
 
-            // Barra para escribir respuesta
             Surface(
                 color = Color.White,
                 shadowElevation = 4.dp

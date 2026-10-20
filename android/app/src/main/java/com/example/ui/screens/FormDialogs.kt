@@ -41,10 +41,9 @@ import com.example.ui.theme.TurquesaOscuro
 import com.example.ui.theme.TurquesaTextil
 import com.example.ui.viewmodel.ApplicationFormState
 
-/** Formatea un monto en pesos chilenos: 38990 -> "$38.990". */
+/** 38990 -> "$38.990" */
 fun formatClp(amount: Int): String = "$" + "%,d".format(amount).replace(',', '.')
 
-/** Formulario de postulación a una convocatoria de la fundación. */
 @Composable
 fun ApplicationDialog(
     form: ApplicationFormState,

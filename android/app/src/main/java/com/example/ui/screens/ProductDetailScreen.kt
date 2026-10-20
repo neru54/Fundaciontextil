@@ -48,7 +48,6 @@ import com.example.ui.theme.TurquesaTextil
 import com.example.ui.viewmodel.AppViewModelProvider
 import com.example.ui.viewmodel.ProductDetailViewModel
 
-/** Pantalla de detalle de una prenda (ruta product/{productId}). */
 @Composable
 fun ProductDetailScreen(
     onBack: () -> Unit,
@@ -119,7 +118,6 @@ fun ProductDetailScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Imagen o color de la prenda
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -171,7 +169,6 @@ fun ProductDetailScreen(
                     )
                 }
 
-                // Socia artesana
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -194,7 +191,6 @@ fun ProductDetailScreen(
 
                 Text(current.description, fontSize = 14.sp, color = NegroCarbon, lineHeight = 20.sp)
 
-                // Trazabilidad ambiental
                 Card(
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     shape = RoundedCornerShape(12.dp),

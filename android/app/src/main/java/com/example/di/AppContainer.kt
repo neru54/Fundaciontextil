@@ -12,10 +12,7 @@ import com.example.data.repository.ChatRepository
 import com.example.data.repository.OrderRepository
 import com.example.data.repository.ProductRepository
 
-/**
- * Contenedor de dependencias (inyección manual).
- * Crea una sola vez la base de datos y los repositorios, y los comparte con los ViewModels.
- */
+/** Inyección de dependencias manual. */
 class AppContainer(context: Context) {
 
     private val database = AppDatabase.getInstance(context)

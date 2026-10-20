@@ -26,7 +26,6 @@ import com.example.ui.theme.TurquesaClaro
 import com.example.ui.theme.TurquesaOscuro
 import com.example.ui.theme.TurquesaTextil
 
-/** Pestaña de la barra inferior asociada a una ruta. */
 private data class BottomTab(
     val route: String,
     val label: String,
@@ -42,10 +41,7 @@ private val bottomTabs = listOf(
     BottomTab(Routes.WORKSHOP, "Mi Taller", Icons.Filled.Person, Icons.Outlined.Person, "nav_tab_workshop")
 )
 
-/**
- * Barra de navegación principal. Marca la pestaña según la ruta actual
- * y muestra un contador de mensajes sin leer.
- */
+/** Barra inferior con contador de no leídos. */
 @Composable
 fun MainBottomNavigationBar(
     currentRoute: String?,

@@ -1,10 +1,6 @@
 package com.example.domain.model
 
-/**
- * Modelos de dominio usados por la interfaz.
- * No dependen de Room ni de Android, por lo que la UI no conoce
- * cómo se guardan los datos (separación de responsabilidades).
- */
+/** Modelos de dominio, independientes de Room y Android. */
 
 data class Product(
     val id: Long = 0,
@@ -19,7 +15,6 @@ data class Product(
     val description: String,
     val fabricOrigin: String,
     val colorHex: Long = 0xFF00A896,
-    /** Ruta del archivo de la foto en el almacenamiento interno (null si no tiene foto). */
     val imagePath: String? = null
 )
 
@@ -33,7 +28,6 @@ data class Announcement(
     val requirements: String,
     val availableSpots: Int,
     val isExclusiveSocias: Boolean = true,
-    /** true si la socia ya postuló a esta convocatoria. */
     val applied: Boolean = false
 )
 
@@ -56,7 +50,6 @@ data class ChatMessage(
     val time: String
 )
 
-/** Línea del carrito: un producto agregado por la compradora. */
 data class CartLine(
     val cartId: Long,
     val productId: Long,
@@ -65,7 +58,6 @@ data class CartLine(
     val partnerName: String
 )
 
-/** Socia registrada en la fundación. */
 data class Partner(
     val id: Long,
     val name: String,
@@ -75,16 +67,15 @@ data class Partner(
     val comuna: String,
     val workshopName: String
 ) {
-    /** Iniciales para el avatar (ej: "Valentina Silva" -> "VS"). */
+    /** "Valentina Silva" -> "VS" */
     val initials: String
         get() = name.split(" ").filter { it.isNotBlank() }.take(2)
             .joinToString("") { it.first().uppercase() }
 
-    /** Código de socia que se muestra en el perfil (ej: TC-001). */
+    /** Ej: TC-001 */
     val memberCode: String get() = "TC-%03d".format(id)
 }
 
-/** Datos del formulario de registro, ya validados. */
 data class NewPartner(
     val name: String,
     val rut: String,
@@ -95,7 +86,6 @@ data class NewPartner(
     val password: String
 )
 
-/** Datos de envío del checkout, ya validados. */
 data class ShippingInfo(
     val fullName: String,
     val address: String,
@@ -103,10 +93,7 @@ data class ShippingInfo(
     val phone: String
 )
 
-/**
- * Socia de demostración que se crea la primera vez que se abre la app,
- * para poder probar el inicio de sesión sin registrarse.
- */
+/** Socia de demostración para probar el login. */
 object DemoSocia {
     const val NAME = "Valentina Silva"
     const val RUT = "11111111-1"
@@ -117,7 +104,6 @@ object DemoSocia {
     const val PASSWORD = "telar2026"
 }
 
-/** Categorías disponibles en el catálogo. */
 object ProductCategories {
     const val ALL = "Todas"
     val values = listOf("Chaquetas", "Bolsos", "Accesorios", "Decoración", "Retazos")

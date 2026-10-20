@@ -40,8 +40,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun TextilCircularTheme(
-    // La app usa siempre la paleta clara de la fundación: las tarjetas y fondos están
-    // diseñados sobre blanco, y así el texto mantiene buen contraste en cualquier teléfono.
+    // Siempre tema claro para mantener el contraste
     darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {

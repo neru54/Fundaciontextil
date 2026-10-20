@@ -19,7 +19,6 @@ data class AnnouncementsUiState(
     val announcements: List<Announcement> = emptyList()
 )
 
-/** Formulario de postulación a una convocatoria. */
 data class ApplicationFormState(
     val announcement: Announcement? = null,
     val motivation: FieldState = FieldState(),
@@ -42,7 +41,6 @@ class AnnouncementsViewModel(
     var applicationForm by mutableStateOf(ApplicationFormState())
         private set
 
-    /** Abre el formulario de postulación para una convocatoria. */
     fun startApplication(announcement: Announcement) {
         applicationForm = ApplicationFormState(announcement = announcement)
     }
@@ -58,7 +56,6 @@ class AnnouncementsViewModel(
         )
     }
 
-    /** Valida el motivo y registra la postulación en Room. */
     fun submitApplication(onSuccess: (Announcement) -> Unit) {
         val form = applicationForm
         val announcement = form.announcement ?: return

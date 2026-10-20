@@ -13,7 +13,7 @@ import com.example.domain.model.ChatMessage
 import com.example.domain.model.Partner
 import com.example.domain.model.Product
 
-/** Conversión entre entidades de Room y modelos de dominio. */
+/** Entidad <-> modelo de dominio. */
 
 fun ProductEntity.toDomain() = Product(
     id = id,

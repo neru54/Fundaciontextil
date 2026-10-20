@@ -37,11 +37,9 @@ fun AnnouncementsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Estado visual de los diálogos
     var appliedAnnouncementTitle by remember { mutableStateOf<String?>(null) }
     var selectedAnnouncementDetail by remember { mutableStateOf<Announcement?>(null) }
 
-    // Abre el formulario de postulación; la validación y el guardado los hace el ViewModel
     val applyTo: (Announcement) -> Unit = { announcement -> viewModel.startApplication(announcement) }
 
     LazyColumn(
@@ -88,7 +86,6 @@ fun AnnouncementsScreen(
         }
     }
 
-    // Formulario de postulación con validación del motivo
     if (viewModel.applicationForm.announcement != null) {
         ApplicationDialog(
             form = viewModel.applicationForm,
@@ -102,7 +99,6 @@ fun AnnouncementsScreen(
         )
     }
 
-    // Modal de confirmación de postulación
     appliedAnnouncementTitle?.let { title ->
         AlertDialog(
             onDismissRequest = { appliedAnnouncementTitle = null },
@@ -126,7 +122,6 @@ fun AnnouncementsScreen(
         )
     }
 
-    // Modal de detalle completo del anuncio
     selectedAnnouncementDetail?.let { item ->
         AlertDialog(
             onDismissRequest = { selectedAnnouncementDetail = null },

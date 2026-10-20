@@ -67,7 +67,6 @@ import com.example.ui.theme.TurquesaTextil
 import com.example.ui.viewmodel.AppViewModelProvider
 import com.example.ui.viewmodel.AuthViewModel
 
-/** Pantalla de inicio de sesión de socias. */
 @Composable
 fun LoginScreen(
     onBack: () -> Unit,
@@ -115,7 +114,7 @@ fun LoginScreen(
             Text("¿Aún no eres socia? Regístrate aquí", color = TurquesaOscuro)
         }
 
-        // Ayuda para probar la app sin registrarse
+        // Cuenta de prueba
         Card(
             colors = CardDefaults.cardColors(containerColor = TurquesaClaro),
             shape = RoundedCornerShape(10.dp)
@@ -133,7 +132,6 @@ fun LoginScreen(
     }
 }
 
-/** Pantalla de registro de nuevas socias. */
 @Composable
 fun RegisterScreen(
     onBack: () -> Unit,
@@ -221,7 +219,7 @@ fun RegisterScreen(
             isPassword = true
         )
 
-        // Aceptación del reglamento (campo que no es de texto, con su propio error)
+        // Reglamento
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -265,7 +263,7 @@ fun RegisterScreen(
     }
 }
 
-// ---------- Componentes compartidos por ambas pantallas ----------
+// Componentes compartidos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

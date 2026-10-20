@@ -7,11 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.TextilCircularApp
 
-/**
- * Fábrica central de ViewModels: entrega a cada uno los repositorios que necesita
- * desde el AppContainer.
- * Uso en Compose: viewModel(factory = AppViewModelProvider.Factory)
- */
+/** Fábrica de ViewModels con dependencias del AppContainer. */
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {

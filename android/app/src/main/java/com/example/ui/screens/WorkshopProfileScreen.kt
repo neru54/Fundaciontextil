@@ -59,11 +59,10 @@ fun WorkshopProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: WorkshopViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // Las prendas vienen de Room a través del ViewModel
     val myProducts by viewModel.myProducts.collectAsStateWithLifecycle()
     val partner by viewModel.currentPartner.collectAsStateWithLifecycle()
 
-    // Métricas calculadas a partir de las prendas guardadas en Room
+    // Métricas de impacto
     val totalKgSaved = myProducts.sumOf { it.kgSaved }
     val totalLitersSaved = myProducts.sumOf { it.litersWater }
 
@@ -78,7 +77,6 @@ fun WorkshopProfileScreen(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Cabecera Perfil de Socia
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -152,7 +150,6 @@ fun WorkshopProfileScreen(
                     }
 
                     OutlinedButton(
-                        // El ViewModel cierra la sesión y luego avisa para navegar
                         onClick = { viewModel.logout(onLoggedOut = onLogout) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -167,7 +164,6 @@ fun WorkshopProfileScreen(
             }
         }
 
-        // Métricas de Impacto Ambiental
         item {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
@@ -203,7 +199,6 @@ fun WorkshopProfileScreen(
             }
         }
 
-        // Botón Publicar Nueva Prenda
         item {
             Button(
                 onClick = {
@@ -222,7 +217,6 @@ fun WorkshopProfileScreen(
             }
         }
 
-        // Mis Prendas Publicadas
         item {
             Text(
                 "Tus Prendas en Catálogo (${myProducts.size})",
@@ -234,7 +228,6 @@ fun WorkshopProfileScreen(
 
         items(myProducts, key = { it.id }) { prod ->
             Card(
-                // La prenda recién publicada aparece arriba con animación
                 modifier = Modifier
                     .animateItem()
                     .fillMaxWidth(),
@@ -288,7 +281,6 @@ fun WorkshopProfileScreen(
         }
     }
 
-    // Modal para publicar nueva prenda con validación de formulario
     if (showPublishDialog) {
         PublishProductDialog(
             form = viewModel.publishForm,
@@ -303,7 +295,6 @@ fun WorkshopProfileScreen(
             onPhotoError = viewModel::onPhotoError,
             onDismiss = { showPublishDialog = false },
             onSubmit = {
-                // El ViewModel valida; el diálogo solo se cierra si la prenda se guardó
                 viewModel.submitPublishForm { newProd ->
                     showPublishDialog = false
                     onNewProductPublished(newProd)
@@ -363,11 +354,7 @@ fun ImpactStatCard(
     }
 }
 
-/**
- * Formulario para publicar una prenda.
- * No contiene lógica de validación: recibe el estado ya validado desde WorkshopViewModel
- * y le avisa de cada cambio. Solo maneja los recursos nativos (cámara y galería).
- */
+/** Formulario de publicación; la validación está en WorkshopViewModel. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PublishProductDialog(
@@ -386,12 +373,11 @@ fun PublishProductDialog(
 ) {
     val context = LocalContext.current
 
-    // URI donde la cámara guardará la foto (rememberSaveable: sobrevive si Android recrea la pantalla)
+    // Sobrevive si se recrea la pantalla
     var pendingCameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
-    // true si la usuaria negó el permiso de cámara: se ofrece ir a Ajustes
     var cameraPermissionDenied by rememberSaveable { mutableStateOf(false) }
 
-    // Recurso nativo 1: cámara en resolución completa (TakePicture + FileProvider)
+    // Cámara (TakePicture + FileProvider)
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success: Boolean ->
@@ -406,14 +392,13 @@ fun PublishProductDialog(
         cameraLauncher.launch(uri)
     }
 
-    // Recurso nativo 2: selector de fotos del sistema (no requiere permiso de almacenamiento)
+    // Selector de fotos (sin permiso de almacenamiento)
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) onPhotoUriSelected(uri)
     }
 
-    // Permiso de cámara solicitado en tiempo de ejecución
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -437,7 +422,7 @@ fun PublishProductDialog(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                // --- Foto (Cámara / Galería) ---
+                // Foto
                 Text("Fotografía de la Prenda *", fontSize = 12.sp, fontWeight = FontWeight.Bold)
 
                 val photo = form.photo
@@ -520,7 +505,6 @@ fun PublishProductDialog(
                     }
                 }
                 form.photoError?.let { PopIn { FieldErrorText(it) } }
-                // Si negó el permiso, acceso directo a los Ajustes de la app
                 if (cameraPermissionDenied && form.photo == null) {
                     TextButton(onClick = { openAppSettings(context) }) {
                         Icon(Icons.Default.Settings, contentDescription = null, modifier = Modifier.size(16.dp))
@@ -531,7 +515,7 @@ fun PublishProductDialog(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // --- Campos de texto con validación por campo ---
+                // Campos
                 ValidatedTextField(
                     field = form.title,
                     onValueChange = onTitleChange,
@@ -551,7 +535,7 @@ fun PublishProductDialog(
                     keyboardType = KeyboardType.Number
                 )
 
-                // --- Categoría ---
+                // Categoría
                 Text("Categoría *", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 Row(
                     modifier = Modifier
@@ -620,7 +604,7 @@ fun PublishProductDialog(
     )
 }
 
-/** Mensaje de error con ícono para validaciones que no son campos de texto (foto, categoría). */
+/** Error para campos no textuales. */
 @Composable
 private fun FieldErrorText(message: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
