@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="turquesa_textil">#00A896</color>
+    <color name="turquesa_oscuro">#028090</color>
+    <color name="turquesa_claro">#E0F7F6</color>
+    <color name="negro_carbon">#1C1B1F</color>
+    <color name="amarillo_mostaza">#F9D923</color>
+    <color name="blanco_marfil">#FAFAF9</color>
+</resources>

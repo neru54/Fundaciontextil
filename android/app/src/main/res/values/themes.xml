@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Tema base de la ventana (antes de que cargue Compose).
+      Hereda de Material3 para que diálogos y notificaciones mantengan buen contraste.
+      Los colores de la interfaz se definen en ui/theme/Theme.kt.
+    -->
+    <style name="Theme.MyApplication" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Colores de la Fundación Textil Circular -->
+        <item name="colorPrimary">#00A896</item>
+        <item name="colorSecondary">#1C1B1F</item>
+        <item name="colorTertiary">#F9D923</item>
+        <item name="android:statusBarColor">#00A896</item>
+    </style>
+</resources>
