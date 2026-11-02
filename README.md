@@ -75,7 +75,7 @@ android/app/src/main/java/com/example/
 
 ## Cómo ejecutar el proyecto
 
-1. Instalar **Android Studio** (Ladybug o superior) con **JDK 17**.
+1. Instalar **Android Studio Narwhal 3 Feature Drop (2025.1.3) o superior** (se recomienda la versión más reciente). El proyecto usa Android Gradle Plugin 8.13.2 y Gradle 8.13; las versiones anteriores de Android Studio (Ladybug, Meerkat, etc.) no pueden sincronizarlo. Usar **JDK 17 o superior** (el JDK que trae Android Studio sirve).
 2. Abrir Android Studio → **File › Open** → seleccionar la carpeta **`android`** de este repositorio.
 3. Esperar el **Gradle Sync** (descarga las dependencias la primera vez).
 4. Crear o elegir un emulador (API 24 o superior; se recomienda API 33+ para probar el permiso de notificaciones).
